@@ -1,73 +1,57 @@
-// Online Java Compiler
-// Use this editor to write, compile and run your Java code online
-
 import java.util.stream.Stream;
-import java.util.function.Predicate;
 import java.util.Arrays;
 
 
 public class Main {
-  public static void main(String[] args) {
-      Item[] items = {new Item("Apple"), new Item("Car"), new Item("Toy"), new Item("Today")};
-
-      PredicateController predicate = new PredicateController();
-      predicate.setStartsWith('T');
-      FilterController filter = new FilterController();
-      Item[] filteredStartswithItems = filter.filterItems(items, predicate);
-
-      ContentDisplayController displayer = new ContentDisplayController();
-      displayer.setContent(filteredStartswithItems);
-      displayer.disp();
-  }
+public static void main(String[] args) {
+  String [] items = {"Apple", "Car","Today","Toy"};
+  FilterController filter = new FilterController();
+  String[] filteredStartswithItems = filter.filterItems(items, "T");
+   ContentDisplayController displayer = new ContentDisplayController();
+   displayer.setContent(filteredStartswithItems);
+   displayer.disp();
 }
-
-class Item {
-  private String name;
-
-  public Item(String name) {
-      this.name = name;
-  }
-
-  public String getName() {
-      return name;
-  }
-
-  public boolean startsWith(char c) {
-      return name.charAt(0) == c;
-  }
 }
 
 class FilterController {
-  public Item[] filterItems(Item[] items, PredicateController predicate) {
-      return Arrays.stream(items)
-              .filter(item -> predicate.execute(item))
-              .toArray(Item[]::new);
-  }
+ private StartsWithStrategy string;
+
+ public FilterController() {
+     this.string = new StartsWithStrategy();
+ }
+
+ public String[] filterItems(String[] items, String c) {
+     this.string.setStartsWith(c);
+     return Arrays.stream(items)
+             .filter(item -> string.execute(item))
+             .toArray(String[]::new);
+ }
 }
 
-class ContentDisplayController {
-  private Item[] content;
 
-  public void setContent(Item[] content) {
+class ContentDisplayController {
+  private String[] content;
+
+  public void setContent(String[] content) {
       this.content = content;
   }
 
   public void disp() {
       System.out.println("String Items that start with T:-");
-      for (Item item : content) {
-          System.out.println(item.getName());
+      for (String stringItem : content) {
+          System.out.println(stringItem);
       }
   }
 }
 
-class PredicateController {
-  private char keyChar;
+class StartsWithStrategy  {
+  private String key;
 
-  public void setStartsWith(char c) {
-      this.keyChar = c;
+  public void setStartsWith(String c) {
+      this.key = c;
   }
 
-  public boolean execute(Item item) {
-      return item.startsWith(keyChar);
+  public boolean execute(String item) {
+      return item.startsWith(key);
   }
 }
